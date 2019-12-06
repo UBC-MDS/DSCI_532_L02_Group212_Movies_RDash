@@ -2,11 +2,20 @@
 
 Holly Williams, Aakanksha Dimri, and Thomas Pin's DSCI 532 dashboard project on the `movies` dataset. 
 
-## Link to app
+## Links
 
-LINK()
+Links to important files:
+ - Heroku App()*Note: link will be added once app is deployed*
+ - [App proposal](https://github.com/hwilliams10/DSCI_532_L02_Group212_Movies_RDash/blob/master/proposal.md)
+ - [Code of Conduct](https://github.com/hwilliams10/DSCI_532_L02_Group212_Movies_RDash/blob/master/CODE_OF_CONDUCT.md)
+ - [Contributing](https://github.com/hwilliams10/DSCI_532_L02_Group212_Movies_RDash/blob/master/CONTRIBUTING.md)
+ - [License](https://github.com/hwilliams10/DSCI_532_L02_Group212_Movies_RDash/blob/master/LICENSE.md)
+ - [Reflection](https://github.com/hwilliams10/DSCI_532_L02_Group212_Movies_RDash/blob/master/reflection.md)
 
-*Note: link above will be added once app is deployed*
+ This repo contains the following subfolders:
+ - `data`: contains all raw data for the dashboard
+ - `src`: contains all code files used to wrangle the data, create plots, and make the dashboard
+ - `img`: contains saved images and plots
 
 ## Description of our app & sketch 
 
@@ -42,20 +51,10 @@ As mentioned in the proposal, we have also excluded:
 - movies in the bottom 5% of `production_budgets`
 - movies in the bottom 1% of `US_Gross`
 
+### Demonstration of Progress
 
-## Links
+![](img/progress.jpg)
 
-Links to important files:
- - Heroku App()*Note: link will be added once app is deployed*
- - [App proposal](https://github.com/hwilliams10/DSCI_532_L02_Group212_Movies_RDash/blob/master/proposal.md)
- - [Code of Conduct](https://github.com/hwilliams10/DSCI_532_L02_Group212_Movies_RDash/blob/master/CODE_OF_CONDUCT.md)
- - [Contributing](https://github.com/hwilliams10/DSCI_532_L02_Group212_Movies_RDash/blob/master/CONTRIBUTING.md)
- - [License](https://github.com/hwilliams10/DSCI_532_L02_Group212_Movies_RDash/blob/master/LICENSE.md)
- - [Reflection](https://github.com/hwilliams10/DSCI_532_L02_Group212_Movies_RDash/blob/master/reflection.md)
 
- This repo contains the following subfolders:
- - `data`: contains all raw data for the dashboard
- - `src`: contains all code files used to wrangle the data, create plots, and make the dashboard
- - `img`: contains saved images and plots
 
 
