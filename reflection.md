@@ -12,12 +12,12 @@ In the third week, we were able to incorporate the following suggestions in our 
 
 We also updated our Code of conduct to include a section on 'Expected Behaviour'.
 
-The Following suggestion(s) were not incorporated in milestone 3 due to time constraints:
+Following suggestion(s) were not incorporated in milestone 3 due to time constraints:
 - Countries with `NaN` values do not show up on the plot (spent a ridiculous amount of hours trying to troubleshoot this to no avail)
 - Add zoom in functionality in the world map, as small countries are hard to see on the map
-        * This functionality does not exist in Altair [link_to_open_issue](https://github.com/altair-viz/altair/issues/632)
-        * Though regular zoom in facilitated by all brower(s) should be an acceptable workaround for the purpose of this lab
-        * Faceting by continent is also a feasible workaround and infact potentially be more insightful when compared to the whole world
+     - This functionality does not exist in Altair [link_to_open_issue](https://github.com/altair-viz/altair/issues/632)
+     - Though regular zoom in facilitated by all brower(s) should be an acceptable workaround for the purpose of this lab
+     - Faceting by continent is also a feasible workaround and infact potentially be more insightful when compared to the whole world
 - Ability to filter the bar chart to say, top 10 countries or specific countries selected
 
 Following suggestions were not implemented as per group consensus:
