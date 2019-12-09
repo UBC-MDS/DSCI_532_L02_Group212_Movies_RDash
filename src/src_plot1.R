@@ -11,7 +11,7 @@ df_movies <- read_csv("../data/movies_data_clean.csv")
 
 plot_1_func <- function(type="boxplot", metric="boxoffice", report="gross"){
   if(type=="boxplot" & metric=="boxoffice" & report=="gross"){
-    plot_for_ibeam <- df_movies %>% 
+    plot_1_for_ibeam <- df_movies %>% 
       mutate(worldwide_gross = worldwide_gross/1000000) %>% 
       mutate(year = as.factor(year)) %>% 
       group_by(year) %>%
@@ -25,15 +25,15 @@ plot_1_func <- function(type="boxplot", metric="boxoffice", report="gross"){
       theme(panel.border = element_blank(), panel.grid.major = element_blank(),
             panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
             legend.position = "none")
-    plot_for_ibeam <- ggplotly(plot_for_ibeam) %>% 
+    plot_1_for_ibeam <- ggplotly(plot_1_for_ibeam) %>% 
       add_trace(
         hovertemplate = paste('<i>US Boxoffice</i>: $%{worldwide_gross:.2f}',
                               '<b>%{text}</b>')
       )
-    plot_for_ibeam
+    plot_1_for_ibeam
   }
   else if(type=="boxplot" & metric=="boxoffice" & report=="adj"){
-    plot_for_ibeam <- df_movies %>% 
+    plot_1_for_ibeam <- df_movies %>% 
       mutate(worldwide_adj = worldwide_adj/1000000) %>% 
       mutate(year = as.factor(year)) %>% 
       group_by(year) %>%
@@ -47,15 +47,15 @@ plot_1_func <- function(type="boxplot", metric="boxoffice", report="gross"){
       theme(panel.border = element_blank(), panel.grid.major = element_blank(),
             panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
             legend.position = "none")
-    plot_for_ibeam <- ggplotly(plot_for_ibeam) %>% 
+    plot_1_for_ibeam <- ggplotly(plot_1_for_ibeam) %>% 
       add_trace(
         hovertemplate = paste('<i>US Boxoffice</i>: $%{worldwide_adj:.2f}',
                               '<b>%{text}</b>')
       )
-    plot_for_ibeam
+    plot_1_for_ibeam
   }
   else if(type=="boxplot" & metric=="profit" & report=="gross"){
-    plot_for_ibeam <- df_movies %>% 
+    plot_1_for_ibeam <- df_movies %>% 
       mutate(worldwide_profit_gross = worldwide_profit_gross/1000000) %>% 
       mutate(year = as.factor(year)) %>% 
       group_by(year) %>%
@@ -69,15 +69,15 @@ plot_1_func <- function(type="boxplot", metric="boxoffice", report="gross"){
       theme(panel.border = element_blank(), panel.grid.major = element_blank(),
             panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
             legend.position = "none")
-    plot_for_ibeam <- ggplotly(plot_for_ibeam) %>% 
+    plot_1_for_ibeam <- ggplotly(plot_1_for_ibeam) %>% 
       add_trace(
         hovertemplate = paste('<i>US Boxoffice</i>: $%{worldwide_profit_gross:.2f}',
                               '<b>%{text}</b>')
       )
-    plot_for_ibeam
+    plot_1_for_ibeam
   }
   else if(type=="boxplot" & metric=="profit" & report=="adj"){
-    plot_for_ibeam <- df_movies %>% 
+    plot_1_for_ibeam <- df_movies %>% 
       mutate(worldwide_profit_adj = worldwide_profit_adj/1000000) %>% 
       mutate(year = as.factor(year)) %>% 
       group_by(year) %>%
@@ -91,15 +91,15 @@ plot_1_func <- function(type="boxplot", metric="boxoffice", report="gross"){
       theme(panel.border = element_blank(), panel.grid.major = element_blank(),
             panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
             legend.position = "none")
-    plot_for_ibeam <- ggplotly(plot_for_ibeam) %>% 
+    plot_1_for_ibeam <- ggplotly(plot_1_for_ibeam) %>% 
       add_trace(
         hovertemplate = paste('<i>US Boxoffice</i>: $%{worldwide_profit_adj:.2f}',
                               '<b>%{text}</b>')
       )
-    plot_for_ibeam
+    plot_1_for_ibeam
   }
   else if(type=="boxplot" & metric=="bits"){
-    plot_for_ibeam <- df_movies %>% 
+    plot_1_for_ibeam <- df_movies %>% 
       mutate(worldwide_bits = worldwide_bits/1000000) %>% 
       mutate(year = as.factor(year)) %>% 
       group_by(year) %>%
@@ -113,15 +113,15 @@ plot_1_func <- function(type="boxplot", metric="boxoffice", report="gross"){
       theme(panel.border = element_blank(), panel.grid.major = element_blank(),
             panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
             legend.position = "none")
-    plot_for_ibeam <- ggplotly(plot_for_ibeam) %>% 
+    plot_1_for_ibeam <- ggplotly(plot_1_for_ibeam) %>% 
       add_trace(
         hovertemplate = paste('<i>US Boxoffice</i>: $%{worldwide_bits:.2f}',
                               '<b>%{text}</b>')
       )
-    plot_for_ibeam
+    plot_1_for_ibeam
   }
   else if(type=="boxplot" & metric=="budget" & report=="gross"){
-    plot_for_ibeam <- df_movies %>% 
+    plot_1_for_ibeam <- df_movies %>% 
       mutate(production_budget = production_budget/1000000) %>% 
       mutate(year = as.factor(year)) %>% 
       group_by(year) %>%
@@ -135,15 +135,15 @@ plot_1_func <- function(type="boxplot", metric="boxoffice", report="gross"){
       theme(panel.border = element_blank(), panel.grid.major = element_blank(),
             panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
             legend.position = "none")
-    plot_for_ibeam <- ggplotly(plot_for_ibeam) %>% 
+    plot_1_for_ibeam <- ggplotly(plot_1_for_ibeam) %>% 
       add_trace(
         hovertemplate = paste('<i>US Boxoffice</i>: $%{production_budget:.2f}',
                               '<b>%{text}</b>')
       )
-    plot_for_ibeam
+    plot_1_for_ibeam
   }
   else if(type=="boxplot" & metric=="budget" & report=="adj"){
-    plot_for_ibeam <- df_movies %>% 
+    plot_1_for_ibeam <- df_movies %>% 
       mutate(production_budget_adj = production_budget_adj/1000000) %>% 
       mutate(year = as.factor(year)) %>% 
       group_by(year) %>%
@@ -157,15 +157,15 @@ plot_1_func <- function(type="boxplot", metric="boxoffice", report="gross"){
       theme(panel.border = element_blank(), panel.grid.major = element_blank(),
             panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
             legend.position = "none")
-    plot_for_ibeam <- ggplotly(plot_for_ibeam) %>% 
+    plot_1_for_ibeam <- ggplotly(plot_1_for_ibeam) %>% 
       add_trace(
         hovertemplate = paste('<i>US Boxoffice</i>: $%{production_budget_adj:.2f}',
                               '<b>%{text}</b>')
       )
-    plot_for_ibeam
+    plot_1_for_ibeam
   }
   else if(type=="line" & metric=="boxoffice" & report=="gross"){
-    plot_for_ibeam <- df_movies %>% 
+    plot_1_for_ibeam <- df_movies %>% 
     mutate(worldwide_gross = worldwide_gross/1000000) %>% 
     group_by(year) %>%
     mutate(median_metric = median(worldwide_gross)) %>% 
@@ -178,11 +178,11 @@ plot_1_func <- function(type="boxplot", metric="boxoffice", report="gross"){
     scale_y_continuous(labels = dollar)+
     theme(panel.border = element_blank(), panel.grid.major = element_blank(),
           panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"))
-    plot_for_ibeam <- ggplotly(plot_for_ibeam) 
-    plot_for_ibeam
+    plot_1_for_ibeam <- ggplotly(plot_1_for_ibeam) 
+    plot_1_for_ibeam
   }
   else if(type=="line" & metric=="boxoffice" & report=="adj"){
-    plot_for_ibeam <- df_movies %>% 
+    plot_1_for_ibeam <- df_movies %>% 
       mutate(worldwide_adj = worldwide_adj/1000000) %>% 
       group_by(year) %>%
       mutate(median_metric = median(worldwide_adj)) %>% 
@@ -195,11 +195,11 @@ plot_1_func <- function(type="boxplot", metric="boxoffice", report="gross"){
       scale_y_continuous(labels = dollar)+
       theme(panel.border = element_blank(), panel.grid.major = element_blank(),
             panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"))
-    plot_for_ibeam <- ggplotly(plot_for_ibeam) 
-    plot_for_ibeam
+    plot_1_for_ibeam <- ggplotly(plot_1_for_ibeam) 
+    plot_1_for_ibeam
   }
   else if(type=="line" & metric=="profit" & report=="gross"){
-    plot_for_ibeam <- df_movies %>% 
+    plot_1_for_ibeam <- df_movies %>% 
       mutate(worldwide_profit_gross = worldwide_profit_gross/1000000) %>% 
       group_by(year) %>%
       mutate(median_metric = median(worldwide_profit_gross)) %>% 
@@ -212,11 +212,11 @@ plot_1_func <- function(type="boxplot", metric="boxoffice", report="gross"){
       scale_y_continuous(labels = dollar)+
       theme(panel.border = element_blank(), panel.grid.major = element_blank(),
             panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"))
-    plot_for_ibeam <- ggplotly(plot_for_ibeam) 
-    plot_for_ibeam
+    plot_1_for_ibeam <- ggplotly(plot_1_for_ibeam) 
+    plot_1_for_ibeam
   }
   else if(type=="line" & metric=="profit" & report=="adj"){
-    plot_for_ibeam <- df_movies %>% 
+    plot_1_for_ibeam <- df_movies %>% 
       mutate(worldwide_profit_adj = worldwide_profit_adj/1000000) %>% 
       group_by(year) %>%
       mutate(median_metric = median(worldwide_profit_adj)) %>% 
@@ -229,11 +229,11 @@ plot_1_func <- function(type="boxplot", metric="boxoffice", report="gross"){
       scale_y_continuous(labels = dollar)+
       theme(panel.border = element_blank(), panel.grid.major = element_blank(),
             panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"))
-    plot_for_ibeam <- ggplotly(plot_for_ibeam) 
-    plot_for_ibeam
+    plot_1_for_ibeam <- ggplotly(plot_1_for_ibeam) 
+    plot_1_for_ibeam
   }
   else if(type=="line" & metric=="bits"){
-    plot_for_ibeam <- df_movies %>% 
+    plot_1_for_ibeam <- df_movies %>% 
       mutate(worldwide_bits = worldwide_bits/1000000) %>% 
       group_by(year) %>%
       mutate(median_metric = median(worldwide_bits)) %>% 
@@ -245,11 +245,11 @@ plot_1_func <- function(type="boxplot", metric="boxoffice", report="gross"){
       ylab("Median WorldWide BITS Per Million People")+
       theme(panel.border = element_blank(), panel.grid.major = element_blank(),
             panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"))
-    plot_for_ibeam <- ggplotly(plot_for_ibeam) 
-    plot_for_ibeam
+    plot_1_for_ibeam <- ggplotly(plot_1_for_ibeam) 
+    plot_1_for_ibeam
   }
   else if(type=="line" & metric=="budget" & report=="gross"){
-    plot_for_ibeam <- df_movies %>% 
+    plot_1_for_ibeam <- df_movies %>% 
       mutate(production_budget = production_budget/1000000) %>% 
       group_by(year) %>%
       mutate(median_metric = median(production_budget)) %>% 
@@ -262,11 +262,11 @@ plot_1_func <- function(type="boxplot", metric="boxoffice", report="gross"){
       scale_y_continuous(labels = dollar)+
       theme(panel.border = element_blank(), panel.grid.major = element_blank(),
             panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"))
-    plot_for_ibeam <- ggplotly(plot_for_ibeam) 
-    plot_for_ibeam
+    plot_1_for_ibeam <- ggplotly(plot_1_for_ibeam) 
+    plot_1_for_ibeam
   }
   else if(type=="line" & metric=="budget" & report=="adj"){
-    plot_for_ibeam <- df_movies %>% 
+    plot_1_for_ibeam <- df_movies %>% 
       mutate(production_budget_adj = production_budget_adj/1000000) %>% 
       group_by(year) %>%
       mutate(median_metric = median(production_budget_adj)) %>% 
@@ -279,8 +279,8 @@ plot_1_func <- function(type="boxplot", metric="boxoffice", report="gross"){
       scale_y_continuous(labels = dollar)+
       theme(panel.border = element_blank(), panel.grid.major = element_blank(),
             panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"))
-    plot_for_ibeam <- ggplotly(plot_for_ibeam) 
-    plot_for_ibeam
+    plot_1_for_ibeam <- ggplotly(plot_1_for_ibeam) 
+    plot_1_for_ibeam
   }
   else{
     print("fail")
