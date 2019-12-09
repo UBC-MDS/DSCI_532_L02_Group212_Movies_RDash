@@ -10,9 +10,6 @@ library("plotly")
 df_movies <- read_csv("../data/movies_data_clean.csv")
 
 plot_1_func <- function(type="boxplot", metric="boxoffice", report="gross"){
-  print(type)
-  print(metric)
-  print(report)
   if(type=="boxplot" & metric=="boxoffice" & report=="gross"){
     plot_for_ibeam <- df_movies %>% 
       mutate(worldwide_gross = worldwide_gross/1000000) %>% 
@@ -168,11 +165,126 @@ plot_1_func <- function(type="boxplot", metric="boxoffice", report="gross"){
     plot_for_ibeam
   }
   else if(type=="line" & metric=="boxoffice" & report=="gross"){
-    
+    plot_for_ibeam <- df_movies %>% 
+    mutate(worldwide_gross = worldwide_gross/1000000) %>% 
+    group_by(year) %>%
+    mutate(median_metric = median(worldwide_gross)) %>% 
+    ggplot(aes(x=year, y=median_metric))+
+    geom_line()+
+    geom_point()+
+    ggtitle("Median WorldWide Gross Box-Office")+
+    xlab("Year")+
+    ylab("Median WorldWide Gross Box-Office in Millions ($)")+
+    scale_y_continuous(labels = dollar)+
+    theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+          panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"))
+    plot_for_ibeam <- ggplotly(plot_for_ibeam) 
+    plot_for_ibeam
+  }
+  else if(type=="line" & metric=="boxoffice" & report=="adj"){
+    plot_for_ibeam <- df_movies %>% 
+      mutate(worldwide_adj = worldwide_adj/1000000) %>% 
+      group_by(year) %>%
+      mutate(median_metric = median(worldwide_adj)) %>% 
+      ggplot(aes(x=year, y=median_metric))+
+      geom_line()+
+      geom_point()+
+      ggtitle("Adjusted For Inflation Median WorldWide Box-Office")+
+      xlab("Year")+
+      ylab("Adjusted For Inflation Median WorldWide Profit in Millions ($)")+
+      scale_y_continuous(labels = dollar)+
+      theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+            panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"))
+    plot_for_ibeam <- ggplotly(plot_for_ibeam) 
+    plot_for_ibeam
+  }
+  else if(type=="line" & metric=="profit" & report=="gross"){
+    plot_for_ibeam <- df_movies %>% 
+      mutate(worldwide_profit_gross = worldwide_profit_gross/1000000) %>% 
+      group_by(year) %>%
+      mutate(median_metric = median(worldwide_profit_gross)) %>% 
+      ggplot(aes(x=year, y=median_metric))+
+      geom_line()+
+      geom_point()+
+      ggtitle("Median WorldWide Gross Profit")+
+      xlab("Year")+
+      ylab("Median WorldWide Gross Profit in Millions ($)")+
+      scale_y_continuous(labels = dollar)+
+      theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+            panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"))
+    plot_for_ibeam <- ggplotly(plot_for_ibeam) 
+    plot_for_ibeam
+  }
+  else if(type=="line" & metric=="profit" & report=="adj"){
+    plot_for_ibeam <- df_movies %>% 
+      mutate(worldwide_profit_adj = worldwide_profit_adj/1000000) %>% 
+      group_by(year) %>%
+      mutate(median_metric = median(worldwide_profit_adj)) %>% 
+      ggplot(aes(x=year, y=median_metric))+
+      geom_line()+
+      geom_point()+
+      ggtitle("Adjusted For Inflation Median WorldWide Profit")+
+      xlab("Year")+
+      ylab("Adjusted For Inflation Median WorldWide Proft in Millions ($)")+
+      scale_y_continuous(labels = dollar)+
+      theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+            panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"))
+    plot_for_ibeam <- ggplotly(plot_for_ibeam) 
+    plot_for_ibeam
+  }
+  else if(type=="line" & metric=="bits"){
+    plot_for_ibeam <- df_movies %>% 
+      mutate(worldwide_bits = worldwide_bits/1000000) %>% 
+      group_by(year) %>%
+      mutate(median_metric = median(worldwide_bits)) %>% 
+      ggplot(aes(x=year, y=median_metric))+
+      geom_line()+
+      geom_point()+
+      ggtitle("Median WorldWide Butts In Seats (BITS)")+
+      xlab("Year")+
+      ylab("Median WorldWide BITS Per Million People")+
+      theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+            panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"))
+    plot_for_ibeam <- ggplotly(plot_for_ibeam) 
+    plot_for_ibeam
+  }
+  else if(type=="line" & metric=="budget" & report=="gross"){
+    plot_for_ibeam <- df_movies %>% 
+      mutate(production_budget = production_budget/1000000) %>% 
+      group_by(year) %>%
+      mutate(median_metric = median(production_budget)) %>% 
+      ggplot(aes(x=year, y=median_metric))+
+      geom_line()+
+      geom_point()+
+      ggtitle("Median WorldWide Gross Production Budget")+
+      xlab("Year")+
+      ylab("Median WorldWide Gross Production Budget in Millions ($)")+
+      scale_y_continuous(labels = dollar)+
+      theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+            panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"))
+    plot_for_ibeam <- ggplotly(plot_for_ibeam) 
+    plot_for_ibeam
+  }
+  else if(type=="line" & metric=="budget" & report=="adj"){
+    plot_for_ibeam <- df_movies %>% 
+      mutate(production_budget_adj = production_budget_adj/1000000) %>% 
+      group_by(year) %>%
+      mutate(median_metric = median(production_budget_adj)) %>% 
+      ggplot(aes(x=year, y=median_metric))+
+      geom_line()+
+      geom_point()+
+      ggtitle("Adjusted For Inflation Median WorldWide Production Budget")+
+      xlab("Year")+
+      ylab("Adjusted For Inflation Median WorldWide Production Budget in Millions ($)")+
+      scale_y_continuous(labels = dollar)+
+      theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+            panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"))
+    plot_for_ibeam <- ggplotly(plot_for_ibeam) 
+    plot_for_ibeam
   }
   else{
     print("fail")
   }
 }
 
-plot_1_func(type="boxplot", metric="budget", report="adj")
+plot_1_func(type="boxplot", metric="bits", report="adj")
