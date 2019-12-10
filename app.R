@@ -10,7 +10,8 @@ library(gapminder)
 options(tidyverse.quiet = TRUE,
         repr.plot.width = 12,
         repr.plot.height = 5)
-library(ggridges) 
+library(ggridges)
+library(scales)
 
 
 app <- Dash$new(external_stylesheets = "https://codepen.io/chriddyp/pen/bWLwgP.css")
@@ -129,6 +130,7 @@ make_graph <- function(years=c(1980, 2010),
   p1 <- ggplot(data, aes(x=year, y=!!sym(yaxis_to_plot), colour=year)) +
     geom_jitter(alpha=.5, size =.3) +
     scale_x_continuous(breaks = unique(data$year))+
+    scale_y_continuous(labels = comma)+
     xlab("Year") +
     ylab(paste0("Worldwide ", y_label, " (Millions)")) +
     geom_line(aes(x=year, y=median(!!sym(yaxis_to_plot)))) +
@@ -144,6 +146,7 @@ make_graph <- function(years=c(1980, 2010),
     ggplot(aes(x=year, y=median_metric))+
     geom_line()+
     scale_x_continuous(breaks = unique(data$year))+
+    scale_y_continuous(labels = comma)+
     geom_point()+
     ggtitle(paste0("Change in ", y_label, " Over Time", title_end))+
     xlab("Year")+
