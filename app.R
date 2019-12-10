@@ -126,24 +126,32 @@ make_graph <- function(years=c(1980, 2010),
   # reference for converting yaxis string to col reference (quosure) by `!!sym()`
   # see: https://github.com/r-lib/rlang/issues/116
   # originally from Kate S's example
-  p1 <- ggplot(data, aes(x=year, y=!!sym(yaxis_to_plot), colour=year)) +
-    geom_jitter(alpha=.5, size =.3) +
+  
+  #jitter plot
+  p1 <- ggplot(data, aes(x=year, y=!!sym(yaxis_to_plot), colour=year, 
+                         text = paste('</br> Movie: ', title,
+                                      '</br> Year: ', year,
+                                      '</br> Distributor: ', distributor,
+                                      '</br>', y_label,"(M): ", round(!!sym(yaxis_to_plot), 1)))) +
+    geom_jitter(alpha=.5, size =0.7) +
     scale_x_continuous(breaks = unique(data$year))+
+    scale_y_continuous(trans='log10') +
     xlab("Year") +
-    ylab(paste0("Worldwide ", y_label, " (Millions)")) +
+    ylab(paste0("Worldwide ", y_label, " (Millions) - log(10) scale")) +
     geom_line(aes(x=year, y=median(!!sym(yaxis_to_plot)))) +
     ggtitle(paste0("Change in ", y_label, " Over Time", title_end)) +
     theme(panel.border = element_blank(), panel.grid.major = element_blank(),
           panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
           legend.position = "none")
   
-  
+  #line and point chart
   p2 <- data %>% 
     group_by(year) %>%
     mutate(median_metric = median(!!sym(yaxis_to_plot))) %>% 
-    ggplot(aes(x=year, y=median_metric))+
-    geom_line()+
+    ggplot(aes(x=year, y=median_metric, text = paste('</br> Year: ', year,
+                                                     '</br>Average ', y_label,"(M): ", round(median_metric, 1)))) +
     scale_x_continuous(breaks = unique(data$year))+
+    geom_line() +
     geom_point()+
     ggtitle(paste0("Change in ", y_label, " Over Time", title_end))+
     xlab("Year")+
@@ -152,18 +160,10 @@ make_graph <- function(years=c(1980, 2010),
           panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"))
   
   if(type == "jitter"){
-    ggplotly(p1) %>% 
-      add_trace(
-        hovertemplate = paste('<i>US Boxoffice</i>: $%{worldwide_gross:.2f}',
-                              '<b>%{text}</b>')
-      )
+    ggplotly(p1, tooltip = "text") 
   }
   else{
-    ggplotly(p2) %>% 
-      add_trace(
-        hovertemplate = paste('<i>US Boxoffice</i>: $%{worldwide_gross:.2f}',
-                              '<b>%{text}</b>')
-      )
+    ggplotly(p2, tooltip = "text") 
   }
   
 }
