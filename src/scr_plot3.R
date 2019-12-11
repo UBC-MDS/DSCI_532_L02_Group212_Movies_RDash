@@ -5,6 +5,7 @@ options(tidyverse.quiet = TRUE,
 library("tidyverse")
 library("ggridges") 
 library("plotly")
+library("scales")
 
 #read in csv
 df_movies <- read_csv("../data/movies_data_clean.csv")
@@ -15,16 +16,6 @@ firstup <- function(x) {
   substr(x, 1, 1) <- toupper(substr(x, 1, 1))
   x
 }
-
-
-
-if(metric=="boxoffice" & report=="gross"){
-  col_name = quo("worldwide_gross")
-}
-else{
-  col_name = NA
-}
-print(!!!col_name)
 
 
 
