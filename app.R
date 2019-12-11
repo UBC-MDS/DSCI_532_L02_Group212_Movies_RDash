@@ -249,7 +249,7 @@ make_graph_2 <- function(years=c(1980, 2010),
     xlab("") +
     ylab(paste0("Worldwide ", y_label, " (Millions)")) +
     coord_flip()+
-    ggtitle(paste0("Top 10 Movies based on ", y_label, " (Millions)")) +
+    ggtitle(paste0("Top 10 Movies")) +
     theme(panel.border = element_blank(), panel.grid.major = element_blank(),
           panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
           legend.position = "none")
@@ -312,7 +312,7 @@ make_graph_3 <- function(yaxis="worldwide_gross", inf="adj",
     xlab("") +
     ylab(paste0("Worldwide ", y_label, " (Millions)")) +
     coord_flip() +
-    ggtitle(paste0("Comparing Selected Movies based on ", y_label, " (Millions)")) +
+    ggtitle(paste0("Comparing Selected Movies")) +
     theme(panel.border = element_blank(), panel.grid.major = element_blank(),
           panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
           legend.position = "none")
@@ -360,20 +360,18 @@ app$layout(
         list(
           htmlDiv(
             list(
-              htmlP("Select a a y-axis metric from the dropdown:"),
+              dccMarkdown("**Select a a y-axis metric from the dropdown:**"),
               yaxisDropdown,
-              htmlP("Select whether to adjust for inflation (to 2019 dollars):"),
+              dccMarkdown("**Select whether to adjust for inflation (to 2019 dollars):**"),
               inflation_adj,
-              htmlP("Select main chart type:"),
+              dccMarkdown("**Select main chart type:**"),
               chart_type,
-              #htmlP("Select movies to compare"),
-              #moviesDropdown,
-              htmlP("Testing, testing")
+              dccMarkdown("*Add some description notes about the data here*")
             ), style = list('background-color'='lightgrey', 'columnCount'=1, 'width'='20%')
           ),
           htmlDiv(
             list(
-              htmlP("Main Plot"),
+              #htmlP("Main Plot"),
               graph,
               yearSlider
             ), style=list('columnCount'=1, 'width'='75%')
@@ -385,28 +383,20 @@ app$layout(
         list(
           htmlDiv(
             list(
-              #htmlP("Select a a y-axis metric from the dropdown:"),
-              #yaxisDropdown,
-              #htmlP("Select whether to adjust for inflation (to 2019 dollars):"),
-              #inflation_adj,
-              #htmlP("Select main chart type:"),
-              #chart_type,
-              htmlP("Select movies to compare"),
+              dccMarkdown("**Select movies to compare:**"),
               moviesDropdown,
-              htmlP("Testing, testing")
+              dccMarkdown("*add additional notes here if needed*")
             ), style = list('background-color'='lightgrey', 'columnCount'=1, 'width'='20%')
           ),
           htmlDiv(
             list(
-              htmlP("Main Plot"),
               graph3,
-              graph2#,
-              #yearSlider
+              graph2
             ), style=list('columnCount'=2, 'width'='75%')
           )
         ), style = list('display'='flex')#, style = list('width'="20%", 'background-color'='lightgrey')
-      )
-      
+      ),
+      dccMarkdown("Data is from the vega dataset 'Movies'. [Source](https://raw.githubusercontent.com/vega/vega-datasets/master/data/movies.json)")
       
       
       
