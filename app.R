@@ -151,11 +151,11 @@ make_graph_1 <- function(years=c(1980, 2010),
   p2 <- data %>% 
     group_by(year) %>%
     mutate(median_metric = median(!!sym(yaxis_to_plot))) %>% 
-    ggplot(aes(x=year, y=median_metric, text = paste('</br> Year: ', year,
-                                                     '</br>Average ', y_label,"(M): ", round(median_metric, 1)))) +
+    ggplot(aes(x=year, y=median_metric, group=1, text = paste('</br> Year: ', year,
+                                                              '</br>Average ', y_label,"(M): ", round(median_metric, 1)))) +
     scale_x_continuous(breaks = unique(data$year))+
     geom_line() +
-    geom_point()+
+    geom_point() +
     ggtitle(paste0("Change in ", y_label, " Over Time", title_end))+
     xlab("Year")+
     ylab(paste0("Worldwide ", y_label, " (Millions)"))+
@@ -225,7 +225,7 @@ make_graph_2 <- function(years=c(1980, 2010),
     xlab("") +
     ylab(paste0("Worldwide ", y_label, " (Millions)")) +
     coord_flip()+
-    ggtitle(paste0("Top 10 Movies: ", y_label, " (Millions)")) +
+    ggtitle(paste0("Top 10 Movies based on ", y_label, " (Millions)")) +
     theme(panel.border = element_blank(), panel.grid.major = element_blank(),
           panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
           legend.position = "none")
