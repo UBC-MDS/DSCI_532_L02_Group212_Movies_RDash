@@ -1,4 +1,6 @@
-# Adding full interactivity
+##########################
+# Loading libraries
+#########################
 
 library(dash)
 library(dashCoreComponents)
@@ -16,8 +18,6 @@ library('scales')
 
 app <- Dash$new(external_stylesheets = "https://codepen.io/chriddyp/pen/bWLwgP.css")
 
-# Selection components
-
 #read in movies df
 df_movies <- read_csv("data/movies_data_clean.csv") %>% 
   mutate(worldwide_gross = worldwide_gross/1000000) %>% 
@@ -28,7 +28,11 @@ df_movies <- read_csv("data/movies_data_clean.csv") %>%
   mutate(production_budget = production_budget/1000000) %>% 
   mutate(production_budget_adj = production_budget_adj/1000000)
 
-#We can get the years from the dataset to make ticks on the slider
+##################################################################
+# Selection components
+##################################################################
+
+#Making a slider following the DSCI 532 participation example
 yearMarks <- lapply(unique(df_movies$year), as.character)
 names(yearMarks) <- unique(df_movies$year)
 yearSlider <- dccRangeSlider(
@@ -41,13 +45,12 @@ yearSlider <- dccRangeSlider(
 )
 
 
-
 # Storing the labels/values as a tibble means we can use this both 
 # to create the dropdown and convert colnames -> labels when plotting
 yaxisKey <- tibble(label = c("Box Office", "Profit", "Butts in Seats"),
                    value = c("worldwide_gross", "worldwide_profit_gross", "worldwide_bits"))
 
-
+# Select metric to show on y-axis
 yaxisDropdown <- dccDropdown(
   id = "y-axis",
   options = lapply(
@@ -57,6 +60,7 @@ yaxisDropdown <- dccDropdown(
   value = "worldwide_gross"
 )
 
+# Select whether to include inflation
 inflation_adj <- dccRadioItems(
   id='inf-type',
   options=list(
@@ -70,6 +74,7 @@ inflation_adj <- dccRadioItems(
   )
 )
 
+# Select line or jitter plot
 chart_type <- dccRadioItems(
   id='chart-type',
   options=list(
@@ -84,8 +89,9 @@ chart_type <- dccRadioItems(
 )
 
 
-
-# Use a function make_graph_1() to create teh jitter / line graph
+##############################################################################
+# JITTER / LINE GRAPH FUNCTION
+##############################################################################
 
 # Uses default parameters such as all_continents for initial graph
 make_graph_1 <- function(years=c(1980, 2010), 
@@ -125,7 +131,6 @@ make_graph_1 <- function(years=c(1980, 2010),
   
   
   
-  
   # reference for converting yaxis string to col reference (quosure) by `!!sym()`
   # see: https://github.com/r-lib/rlang/issues/116
   # originally from Kate S's example
@@ -161,15 +166,17 @@ make_graph_1 <- function(years=c(1980, 2010),
     ylab(paste0("Worldwide ", y_label, " (Millions)"))+
     theme(panel.border = element_blank(), panel.grid.major = element_blank(),
           panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"))
-  
   if(type == "jitter"){
     ggplotly(p1, tooltip = "text") 
   }
   else{
     ggplotly(p2, tooltip = "text") 
   }
-  
 }
+
+##############################################################################
+# END JITTER / LINE GRAPH FUNCTION
+##############################################################################
 
 
 #######################################################################
@@ -229,19 +236,8 @@ make_graph_2 <- function(years=c(1980, 2010),
     theme(panel.border = element_blank(), panel.grid.major = element_blank(),
           panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
           legend.position = "none")
-  
-  
-  
   ggplotly(p3, tooltip = "text") 
-  
-  
 }
-
-
-
-
-
-
 
 #######################################################################
 #END BAR PLOT
@@ -258,6 +254,10 @@ graph2 <- dccGraph(
   id = 'bar-graph',
   figure=make_graph_2() # gets initial data using argument defaults
 )
+
+##########################################################################
+# START LAYOUT
+##########################################################################
 
 app$layout(
   htmlDiv(
@@ -286,9 +286,16 @@ app$layout(
   )
 )
 
-# Adding callbacks for interactivity
-# We need separate callbacks to update graph and table
-# BUT can use multiple inputs for each!
+###########################################################################
+# END LAYOUT
+###########################################################################
+
+
+###########################################################################
+# START CALLBACKS
+############################################################################
+
+# Callback for graph / line chart
 app$callback(
   #update figure of gap-graph
   output=list(id='gap-graph', property='figure'),
@@ -302,6 +309,7 @@ app$callback(
     make_graph_1(year_value, yaxis_value, inf_type, chart_selection)
   })
 
+# Callback for bar chart
 app$callback(
   #update figure of gap-graph
   output=list(id='bar-graph', property='figure'),
@@ -313,5 +321,10 @@ app$callback(
   function(year_value, yaxis_value, inf_type) {
     make_graph_2(year_value, yaxis_value, inf_type)
   })
+
+#####################################################################
+# END CALLBACKS
+#####################################################################
+
 
 app$run_server()
