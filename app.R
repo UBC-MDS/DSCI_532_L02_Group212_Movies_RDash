@@ -348,30 +348,70 @@ graph3 <- dccGraph(
 app$layout(
   htmlDiv(
     list(
-      htmlH1('M is for Movies'),
-      htmlH2('Comparing success metrics'),
-      #selection components
-      htmlLabel('Select y-axis metric:'),
-      yaxisDropdown,
-      htmlLabel('Select whether to adjust for inflation:'),
-      inflation_adj,
-      htmlLabel('Select chart type:'),
-      chart_type,
+      htmlDiv(
+        list(
+          htmlH3("Group 212"),
+          htmlH2("M is for Movies!")
+          #htmlH4("Smaller Text")
+        ), style = list('columnCount'=2, 'background-color'= 'grey')
+      ),
+      
+      htmlDiv(
+        list(
+          htmlDiv(
+            list(
+              htmlP("Select a a y-axis metric from the dropdown:"),
+              yaxisDropdown,
+              htmlP("Select whether to adjust for inflation (to 2019 dollars):"),
+              inflation_adj,
+              htmlP("Select main chart type:"),
+              chart_type,
+              #htmlP("Select movies to compare"),
+              #moviesDropdown,
+              htmlP("Testing, testing")
+            ), style = list('background-color'='lightgrey', 'columnCount'=1, 'width'='20%')
+          ),
+          htmlDiv(
+            list(
+              htmlP("Main Plot"),
+              graph,
+              yearSlider
+            ), style=list('columnCount'=1, 'width'='75%')
+          )
+        ), style = list('display'='flex')#, style = list('width'="30%", 'background-color'='lightgrey')
+      ),
+      
+      htmlDiv(
+        list(
+          htmlDiv(
+            list(
+              #htmlP("Select a a y-axis metric from the dropdown:"),
+              #yaxisDropdown,
+              #htmlP("Select whether to adjust for inflation (to 2019 dollars):"),
+              #inflation_adj,
+              #htmlP("Select main chart type:"),
+              #chart_type,
+              htmlP("Select movies to compare"),
+              moviesDropdown,
+              htmlP("Testing, testing")
+            ), style = list('background-color'='lightgrey', 'columnCount'=1, 'width'='20%')
+          ),
+          htmlDiv(
+            list(
+              htmlP("Main Plot"),
+              graph3,
+              graph2#,
+              #yearSlider
+            ), style=list('columnCount'=2, 'width'='75%')
+          )
+        ), style = list('display'='flex')#, style = list('width'="20%", 'background-color'='lightgrey')
+      )
       
       
-      #graph 
-      graph, 
-      htmlIframe(height=20, width=5, style=list(borderWidth = 0)), #space
-      htmlLabel('Select a year range:'),
-      yearSlider,
-      htmlIframe(height=15, width=10, style=list(borderWidth = 0)), #space
-      graph2,
-      htmlIframe(height=20, width=10, style=list(borderWidth = 0)), #space
-      htmlLabel('Select movies to compare:'),
-      moviesDropdown,
-      graph3,
-      htmlIframe(height=20, width=10, style=list(borderWidth = 0)), #space
-      dccMarkdown("[Data Source]()")
+      
+      
+      
+      
     )
   )
 )
