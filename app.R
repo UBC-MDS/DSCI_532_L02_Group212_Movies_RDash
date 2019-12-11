@@ -8,10 +8,12 @@ library(tidyverse)
 library(plotly)
 library(gapminder)
 options(tidyverse.quiet = TRUE,
-        repr.plot.width = 12,
+        repr.plot.width = 6,
         repr.plot.height = 5)
-library(ggridges)
-library(scales)
+
+library(ggridges) 
+library('scales')
+
 
 
 app <- Dash$new(external_stylesheets = "https://codepen.io/chriddyp/pen/bWLwgP.css")
@@ -27,7 +29,7 @@ df_movies <- read_csv("data/movies_data_clean.csv") %>%
   mutate(worldwide_bits = worldwide_bits/1000000) %>% 
   mutate(production_budget = production_budget/1000000) %>% 
   mutate(production_budget_adj = production_budget_adj/1000000)
-  
+
 #We can get the years from the dataset to make ticks on the slider
 yearMarks <- lapply(unique(df_movies$year), as.character)
 names(yearMarks) <- unique(df_movies$year)
@@ -62,12 +64,12 @@ inflation_adj <- dccRadioItems(
   options=list(
     list('label'='Gross', 'value'='gross'),
     list('label'='Adjusted for inflation', 'value'='adj')
-    ),
+  ),
   value='adj',
   labelStyle=list(
     "display"= "inline-block",
     "padding"= "12px 12px 12px 0px"
-    )
+  )
 )
 
 chart_type <- dccRadioItems(
@@ -83,11 +85,13 @@ chart_type <- dccRadioItems(
   )
 )
 
-# Use a function make_graph() to create the graph
+
+
+# Use a function make_graph_1() to create teh jitter / line graph
 
 # Uses default parameters such as all_continents for initial graph
-make_graph <- function(years=c(1980, 2010), 
-                       yaxis="worldwide_gross", inf="adj", type="jitter"){
+make_graph_1 <- function(years=c(1980, 2010), 
+                         yaxis="worldwide_gross", inf="adj", type="jitter"){
   
   # gets the label matching the column value
   if(inf=="adj"){
@@ -100,7 +104,7 @@ make_graph <- function(years=c(1980, 2010),
                        value = c("worldwide_gross", "worldwide_profit_gross", "worldwide_bits"))
     title_end = " - Not Adjusted for inflation"
   }
-    
+  
   # if inflation selected, use adjusted values
   if(inf=="adj"){
     if(yaxis =="worldwide_gross"){
@@ -122,30 +126,37 @@ make_graph <- function(years=c(1980, 2010),
     filter(year >= years[1] & year <= years[2])
   
   
-
+  
   
   # reference for converting yaxis string to col reference (quosure) by `!!sym()`
   # see: https://github.com/r-lib/rlang/issues/116
   # originally from Kate S's example
-  p1 <- ggplot(data, aes(x=year, y=!!sym(yaxis_to_plot), colour=year)) +
-    geom_jitter(alpha=.5, size =.3) +
+  
+  #jitter plot
+  p1 <- ggplot(data, aes(x=year, y=!!sym(yaxis_to_plot), colour=year, 
+                         text = paste('</br> Movie: ', title,
+                                      '</br> Year: ', year,
+                                      '</br> Distributor: ', distributor,
+                                      '</br>', y_label,"(M): ", round(!!sym(yaxis_to_plot), 1)))) +
+    geom_jitter(alpha=.5, size =0.7) +
     scale_x_continuous(breaks = unique(data$year))+
-    scale_y_continuous(labels = comma)+
+    scale_y_continuous(labels = comma, trans='log10') +
     xlab("Year") +
-    ylab(paste0("Worldwide ", y_label, " (Millions)")) +
+    ylab(paste0("Worldwide ", y_label, " (Millions) - log(10) scale")) +
     geom_line(aes(x=year, y=median(!!sym(yaxis_to_plot)))) +
     ggtitle(paste0("Change in ", y_label, " Over Time", title_end)) +
     theme(panel.border = element_blank(), panel.grid.major = element_blank(),
           panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
           legend.position = "none")
   
-  
+  #line and point chart
   p2 <- data %>% 
     group_by(year) %>%
     mutate(median_metric = median(!!sym(yaxis_to_plot))) %>% 
-    ggplot(aes(x=year, y=median_metric))+
-    geom_line()+
+    ggplot(aes(x=year, y=median_metric, text = paste('</br> Year: ', year,
+                                                     '</br>Average ', y_label,"(M): ", round(median_metric, 1)))) +
     scale_x_continuous(breaks = unique(data$year))+
+    geom_line() +
     scale_y_continuous(labels = comma)+
     geom_point()+
     ggtitle(paste0("Change in ", y_label, " Over Time", title_end))+
@@ -155,29 +166,101 @@ make_graph <- function(years=c(1980, 2010),
           panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"))
   
   if(type == "jitter"){
-    ggplotly(p1) %>% 
-      add_trace(
-        hovertemplate = paste('<i>US Boxoffice</i>: $%{worldwide_gross:.2f}',
-                              '<b>%{text}</b>')
-      )
+    ggplotly(p1, tooltip = "text") 
   }
   else{
-    ggplotly(p2) %>% 
-      add_trace(
-        hovertemplate = paste('<i>US Boxoffice</i>: $%{worldwide_gross:.2f}',
-                              '<b>%{text}</b>')
-      )
+    ggplotly(p2, tooltip = "text") 
   }
   
 }
 
+
+#######################################################################
+# START BAR PLOT
+#######################################################################
+
+#bar plot
+make_graph_2 <- function(years=c(1980, 2010), 
+                         yaxis="worldwide_gross", inf="adj"){
+  
+  # gets the label matching the column value
+  if(inf=="adj"){
+    yaxisKey <- tibble(label = c("Box Office", "Profit", "Butts in Seats"),
+                       value = c("worldwide_adj", "worldwide_profit_adj", "worldwide_bits"))
+    title_end = " - Adjusted for inflation"
+  }
+  else{
+    yaxisKey <- tibble(label = c("Box Office", "Profit", "Butts in Seats"),
+                       value = c("worldwide_gross", "worldwide_profit_gross", "worldwide_bits"))
+    title_end = " - Not Adjusted for inflation"
+  }
+  
+  # if inflation selected, use adjusted values
+  if(inf=="adj"){
+    if(yaxis =="worldwide_gross"){
+      yaxis_to_plot = "worldwide_adj"
+    }
+    else if(yaxis == "worldwide_profit_gross"){
+      yaxis_to_plot = "worldwide_profit_adj"
+    }
+    else if(yaxis=="worldwide_bits"){
+      yaxis_to_plot = "worldwide_bits"
+    }
+  }
+  else yaxis_to_plot = yaxis
+  
+  y_label <- yaxisKey$label[yaxisKey$value==yaxis_to_plot]
+  
+  #filter our data based on the year/continent selections
+  data <- df_movies %>%
+    filter(year >= years[1] & year <= years[2]) %>% 
+    arrange(desc(!!sym(yaxis_to_plot))) %>%
+    slice(1:10)
+  
+  p3 <- ggplot(data, aes(x=reorder(title, !!sym(yaxis_to_plot)), y=!!sym(yaxis_to_plot),  
+                         text = paste('</br> Movie: ', title,
+                                      '</br> Year: ', year,
+                                      '</br> Distributor: ', distributor,
+                                      '</br>', y_label,"(M): ", round(!!sym(yaxis_to_plot), 1)))) +
+    geom_bar(stat = 'identity') +
+    #scale_x_continuous(breaks = unique(data$year))+
+    scale_y_continuous(labels = comma) +
+    xlab("") +
+    ylab(paste0("Worldwide ", y_label, " (Millions)")) +
+    coord_flip()+
+    ggtitle(paste0("Top 10 Movies: ", y_label, " (Millions)")) +
+    theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+          panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
+          legend.position = "none")
+  
+  
+  
+  ggplotly(p3, tooltip = "text") 
+  
+  
+}
+
+
+
+
+
+
+
+#######################################################################
+#END BAR PLOT
+#######################################################################
+
+
 # Now we define the graph as a dash component using generated figure
 graph <- dccGraph(
   id = 'gap-graph',
-  figure=make_graph() # gets initial data using argument defaults
+  figure=make_graph_1() # gets initial data using argument defaults
 )
 
-
+graph2 <- dccGraph(
+  id = 'bar-graph',
+  figure=make_graph_2() # gets initial data using argument defaults
+)
 
 app$layout(
   htmlDiv(
@@ -185,12 +268,13 @@ app$layout(
       htmlH1('M is for Movies'),
       htmlH2('Comparing success metrics'),
       #selection components
-      #htmlLabel('Select a year range:'),
       htmlLabel('Select y-axis metric:'),
       yaxisDropdown,
+      htmlLabel('Select whether to adjust for inflation:'),
       inflation_adj,
+      htmlLabel('Select chart type:'),
       chart_type,
-   
+      
       
       #graph 
       graph, 
@@ -198,7 +282,8 @@ app$layout(
       htmlLabel('Select a year range:'),
       yearSlider,
       htmlIframe(height=15, width=10, style=list(borderWidth = 0)), #space
-
+      graph2,
+      htmlIframe(height=20, width=10, style=list(borderWidth = 0)), #space
       dccMarkdown("[Data Source]()")
     )
   )
@@ -217,8 +302,19 @@ app$callback(
               input(id='chart-type', property='value')),
   #this translates your list of params into function arguments
   function(year_value, yaxis_value, inf_type, chart_selection) {
-    make_graph(year_value, yaxis_value, inf_type, chart_selection)
+    make_graph_1(year_value, yaxis_value, inf_type, chart_selection)
   })
 
+app$callback(
+  #update figure of gap-graph
+  output=list(id='bar-graph', property='figure'),
+  #based on values of year, continent, y-axis components
+  params=list(input(id='year', property='value'),
+              input(id='y-axis', property='value'),
+              input(id='inf-type', property='value')),
+  #this translates your list of params into function arguments
+  function(year_value, yaxis_value, inf_type) {
+    make_graph_2(year_value, yaxis_value, inf_type)
+  })
 
 app$run_server()
