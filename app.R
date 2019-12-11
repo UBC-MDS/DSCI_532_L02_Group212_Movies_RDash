@@ -1,4 +1,6 @@
-# Adding full interactivity
+##########################
+# Loading libraries
+#########################
 
 library(dash)
 library(dashCoreComponents)
@@ -18,8 +20,6 @@ library('scales')
 
 app <- Dash$new(external_stylesheets = "https://codepen.io/chriddyp/pen/bWLwgP.css")
 
-# Selection components
-
 #read in movies df
 df_movies <- read_csv("data/movies_data_clean.csv") %>% 
   mutate(worldwide_gross = worldwide_gross/1000000) %>% 
@@ -30,7 +30,11 @@ df_movies <- read_csv("data/movies_data_clean.csv") %>%
   mutate(production_budget = production_budget/1000000) %>% 
   mutate(production_budget_adj = production_budget_adj/1000000)
 
-#We can get the years from the dataset to make ticks on the slider
+##################################################################
+# Selection components
+##################################################################
+
+#Making a slider following the DSCI 532 participation example
 yearMarks <- lapply(unique(df_movies$year), as.character)
 names(yearMarks) <- unique(df_movies$year)
 yearSlider <- dccRangeSlider(
@@ -43,13 +47,12 @@ yearSlider <- dccRangeSlider(
 )
 
 
-
 # Storing the labels/values as a tibble means we can use this both 
 # to create the dropdown and convert colnames -> labels when plotting
 yaxisKey <- tibble(label = c("Box Office", "Profit", "Butts in Seats"),
                    value = c("worldwide_gross", "worldwide_profit_gross", "worldwide_bits"))
 
-
+# Select metric to show on y-axis
 yaxisDropdown <- dccDropdown(
   id = "y-axis",
   options = lapply(
@@ -59,6 +62,7 @@ yaxisDropdown <- dccDropdown(
   value = "worldwide_gross"
 )
 
+# Select whether to include inflation
 inflation_adj <- dccRadioItems(
   id='inf-type',
   options=list(
@@ -72,6 +76,7 @@ inflation_adj <- dccRadioItems(
   )
 )
 
+# Select line or jitter plot
 chart_type <- dccRadioItems(
   id='chart-type',
   options=list(
@@ -85,9 +90,24 @@ chart_type <- dccRadioItems(
   )
 )
 
+# Select which movies to compare
+moviesDropdown <- dccDropdown(
+  id = "movies-dd",
+  # Credit to Kate S and teh participation app4.R example for the code below
+  # map/lapply can be used as a shortcut instead of writing the whole list
+  # especially useful if you wanted to filter by country!
+  options = map(
+    df_movies$title, function(x){
+      list(label=x, value=x)
+    }),
+  value = c("Alice in Wonderland", "Despicable Me", "Easy A"), #I picked these movies as default
+  multi = TRUE
+)
 
 
-# Use a function make_graph_1() to create teh jitter / line graph
+##############################################################################
+# JITTER / LINE GRAPH FUNCTION
+##############################################################################
 
 # Uses default parameters such as all_continents for initial graph
 make_graph_1 <- function(years=c(1980, 2010), 
@@ -127,7 +147,6 @@ make_graph_1 <- function(years=c(1980, 2010),
   
   
   
-  
   # reference for converting yaxis string to col reference (quosure) by `!!sym()`
   # see: https://github.com/r-lib/rlang/issues/116
   # originally from Kate S's example
@@ -153,8 +172,8 @@ make_graph_1 <- function(years=c(1980, 2010),
   p2 <- data %>% 
     group_by(year) %>%
     mutate(median_metric = median(!!sym(yaxis_to_plot))) %>% 
-    ggplot(aes(x=year, y=median_metric, text = paste('</br> Year: ', year,
-                                                     '</br>Average ', y_label,"(M): ", round(median_metric, 1)))) +
+    ggplot(aes(x=year, y=median_metric, group=1, text = paste('</br> Year: ', year,
+                                                              '</br>Average ', y_label,"(M): ", round(median_metric, 1)))) +
     scale_x_continuous(breaks = unique(data$year))+
     geom_line() +
     scale_y_continuous(labels = comma)+
@@ -164,15 +183,17 @@ make_graph_1 <- function(years=c(1980, 2010),
     ylab(paste0("Worldwide ", y_label, " (Millions)"))+
     theme(panel.border = element_blank(), panel.grid.major = element_blank(),
           panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"))
-  
   if(type == "jitter"){
     ggplotly(p1, tooltip = "text") 
   }
   else{
     ggplotly(p2, tooltip = "text") 
   }
-  
 }
+
+##############################################################################
+# END JITTER / LINE GRAPH FUNCTION
+##############################################################################
 
 
 #######################################################################
@@ -228,28 +249,79 @@ make_graph_2 <- function(years=c(1980, 2010),
     xlab("") +
     ylab(paste0("Worldwide ", y_label, " (Millions)")) +
     coord_flip()+
-    ggtitle(paste0("Top 10 Movies: ", y_label, " (Millions)")) +
+    ggtitle(paste0("Top 10 Movies")) +
     theme(panel.border = element_blank(), panel.grid.major = element_blank(),
           panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
           legend.position = "none")
-  
-  
-  
   ggplotly(p3, tooltip = "text") 
-  
-  
 }
-
-
-
-
-
-
 
 #######################################################################
 #END BAR PLOT
 #######################################################################
 
+######################################################################
+# START COMPARISON PLOT
+######################################################################
+
+#bar plot
+make_graph_3 <- function(yaxis="worldwide_gross", inf="adj",
+                         movies_sel=c("Alice in Wonderland", "Despicable Me", "Easy A")){
+  
+  # gets the label matching the column value
+  if(inf=="adj"){
+    yaxisKey <- tibble(label = c("Box Office", "Profit", "Butts in Seats"),
+                       value = c("worldwide_adj", "worldwide_profit_adj", "worldwide_bits"))
+    title_end = " - Adjusted for inflation"
+  }
+  else{
+    yaxisKey <- tibble(label = c("Box Office", "Profit", "Butts in Seats"),
+                       value = c("worldwide_gross", "worldwide_profit_gross", "worldwide_bits"))
+    title_end = " - Not Adjusted for inflation"
+  }
+  
+  # if inflation selected, use adjusted values
+  if(inf=="adj"){
+    if(yaxis =="worldwide_gross"){
+      yaxis_to_plot = "worldwide_adj"
+    }
+    else if(yaxis == "worldwide_profit_gross"){
+      yaxis_to_plot = "worldwide_profit_adj"
+    }
+    else if(yaxis=="worldwide_bits"){
+      yaxis_to_plot = "worldwide_bits"
+    }
+  }
+  else yaxis_to_plot = yaxis
+  
+  y_label <- yaxisKey$label[yaxisKey$value==yaxis_to_plot]
+  
+  #filter our data based on the year/continent selections
+  data <- df_movies %>%
+    #filter(year >= years[1] & year <= years[2]) %>% 
+    filter(title %in% movies_sel) 
+  
+  p4 <- ggplot(data, aes(x=reorder(title, !!sym(yaxis_to_plot)), y=!!sym(yaxis_to_plot),  
+                         text = paste('</br> Movie: ', title,
+                                      '</br> Year: ', year,
+                                      '</br> Distributor: ', distributor,
+                                      '</br>', y_label,"(M): ", round(!!sym(yaxis_to_plot), 1)))) +
+    geom_bar(stat = 'identity', position="dodge") +
+    #scale_x_continuous(breaks = unique(data$year))+
+    scale_y_continuous(labels = comma) +
+    xlab("") +
+    ylab(paste0("Worldwide ", y_label, " (Millions)")) +
+    coord_flip() +
+    ggtitle(paste0("Comparing Selected Movies")) +
+    theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+          panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
+          legend.position = "none")
+  ggplotly(p4, tooltip = "text") 
+}
+
+######################################################################
+# END COMPARISON PLOT
+######################################################################
 
 # Now we define the graph as a dash component using generated figure
 graph <- dccGraph(
@@ -262,40 +334,91 @@ graph2 <- dccGraph(
   figure=make_graph_2() # gets initial data using argument defaults
 )
 
+graph3 <- dccGraph(
+  id = 'comp-graph',
+  figure=make_graph_3() # gets initial data using argument defaults
+)
+
+
+
+##########################################################################
+# START LAYOUT
+##########################################################################
+
 app$layout(
   htmlDiv(
     list(
-      htmlH1('M is for Movies'),
-      htmlH2('Comparing success metrics'),
-      #selection components
-      htmlLabel('Select y-axis metric:'),
-      yaxisDropdown,
-      htmlLabel('Select whether to adjust for inflation:'),
-      inflation_adj,
-      htmlLabel('Select chart type:'),
-      chart_type,
+      htmlDiv(
+        list(
+          htmlH3("Group 212"),
+          htmlH2("M is for Movies!")
+          #htmlH4("Smaller Text")
+        ), style = list('columnCount'=2, 'background-color'= 'grey')
+      ),
+      
+      htmlDiv(
+        list(
+          htmlDiv(
+            list(
+              dccMarkdown("**Select a a y-axis metric from the dropdown:**"),
+              yaxisDropdown,
+              dccMarkdown("**Select whether to adjust for inflation (to 2019 dollars):**"),
+              inflation_adj,
+              dccMarkdown("**Select main chart type:**"),
+              chart_type,
+              dccMarkdown("*Add some description notes about the data here*")
+            ), style = list('background-color'='lightgrey', 'columnCount'=1, 'width'='20%')
+          ),
+          htmlDiv(
+            list(
+              #htmlP("Main Plot"),
+              graph,
+              yearSlider
+            ), style=list('columnCount'=1, 'width'='75%')
+          )
+        ), style = list('display'='flex')#, style = list('width'="30%", 'background-color'='lightgrey')
+      ),
+      
+      htmlDiv(
+        list(
+          htmlDiv(
+            list(
+              dccMarkdown("**Select movies to compare:**"),
+              moviesDropdown,
+              dccMarkdown("*add additional notes here if needed*")
+            ), style = list('background-color'='lightgrey', 'columnCount'=1, 'width'='20%')
+          ),
+          htmlDiv(
+            list(
+              graph3,
+              graph2
+            ), style=list('columnCount'=2, 'width'='75%')
+          )
+        ), style = list('display'='flex')#, style = list('width'="20%", 'background-color'='lightgrey')
+      ),
+      dccMarkdown("Data is from the vega dataset 'Movies'. [Source](https://raw.githubusercontent.com/vega/vega-datasets/master/data/movies.json)")
       
       
-      #graph 
-      graph, 
-      htmlIframe(height=20, width=10, style=list(borderWidth = 0)), #space
-      htmlLabel('Select a year range:'),
-      yearSlider,
-      htmlIframe(height=15, width=10, style=list(borderWidth = 0)), #space
-      graph2,
-      htmlIframe(height=20, width=10, style=list(borderWidth = 0)), #space
-      dccMarkdown("[Data Source]()")
+      
+      
+      
     )
   )
 )
 
-# Adding callbacks for interactivity
-# We need separate callbacks to update graph and table
-# BUT can use multiple inputs for each!
+###########################################################################
+# END LAYOUT
+###########################################################################
+
+
+###########################################################################
+# START CALLBACKS
+############################################################################
+
+# Callback for graph / line chart
 app$callback(
   #update figure of gap-graph
   output=list(id='gap-graph', property='figure'),
-  #based on values of year, continent, y-axis components
   params=list(input(id='year', property='value'),
               input(id='y-axis', property='value'),
               input(id='inf-type', property='value'),
@@ -305,10 +428,10 @@ app$callback(
     make_graph_1(year_value, yaxis_value, inf_type, chart_selection)
   })
 
+# Callback for bar chart
 app$callback(
-  #update figure of gap-graph
+  #update figure of bar-graph
   output=list(id='bar-graph', property='figure'),
-  #based on values of year, continent, y-axis components
   params=list(input(id='year', property='value'),
               input(id='y-axis', property='value'),
               input(id='inf-type', property='value')),
@@ -316,5 +439,22 @@ app$callback(
   function(year_value, yaxis_value, inf_type) {
     make_graph_2(year_value, yaxis_value, inf_type)
   })
+
+# Callback for comparison bar chart
+app$callback(
+  #update figure of comp-graph
+  output=list(id='comp-graph', property='figure'),
+  params=list(input(id='y-axis', property='value'),
+              input(id='inf-type', property='value'),
+              input(id='movies-dd', property='value')),
+  #this translates your list of params into function arguments
+  function(yaxis_value, inf_type, movies_dd) {
+    make_graph_3(yaxis_value, inf_type, movies_dd)
+  })
+
+#####################################################################
+# END CALLBACKS
+#####################################################################
+
 
 app$run_server()
