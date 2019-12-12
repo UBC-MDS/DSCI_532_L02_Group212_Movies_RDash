@@ -166,7 +166,7 @@ make_graph_1 <- function(years=c(1980, 2010),
     ggtitle(paste0("Change in ", y_label, " Over Time", title_end)) +
     theme(panel.border = element_blank(), panel.grid.major = element_blank(),
           panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
-          legend.position = "none")
+          legend.position = "none", axis.text.x = element_text(angle = 45), plot.title = element_text(hjust = 0.5, size=18),axis.title.x = element_blank())
   
   #line and point chart
   p2 <- data %>% 
@@ -182,12 +182,13 @@ make_graph_1 <- function(years=c(1980, 2010),
     xlab("Year")+
     ylab(paste0("Worldwide ", y_label, " (Millions)"))+
     theme(panel.border = element_blank(), panel.grid.major = element_blank(),
-          panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"))
+          panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
+          axis.text.x = element_text(angle = 45), plot.title = element_text(hjust = 0.5, size=18),axis.title.x = element_blank())
   if(type == "jitter"){
-    ggplotly(p1, tooltip = "text") 
+    ggplotly(p1, tooltip = "text") %>% config(displayModeBar = FALSE)
   }
   else{
-    ggplotly(p2, tooltip = "text") 
+    ggplotly(p2, tooltip = "text") %>% config(displayModeBar = FALSE)
   }
 }
 
@@ -252,8 +253,8 @@ make_graph_2 <- function(years=c(1980, 2010),
     ggtitle(paste0("Top 10 Movies")) +
     theme(panel.border = element_blank(), panel.grid.major = element_blank(),
           panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
-          legend.position = "none")
-  ggplotly(p3, tooltip = "text") 
+          legend.position = "none",plot.title = element_text(hjust = 0.5, size=15),axis.text.x=element_text(size=12))
+  ggplotly(p3, tooltip = "text") %>% config(displayModeBar = FALSE)
 }
 
 #######################################################################
@@ -312,11 +313,11 @@ make_graph_3 <- function(yaxis="worldwide_gross", inf="adj",
     xlab("") +
     ylab(paste0("Worldwide ", y_label, " (Millions)")) +
     coord_flip() +
-    ggtitle(paste0("Comparing Selected Movies")) +
+    ggtitle(paste0("Comparing Movies")) +
     theme(panel.border = element_blank(), panel.grid.major = element_blank(),
           panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
-          legend.position = "none")
-  ggplotly(p4, tooltip = "text") 
+          legend.position = "none", plot.title = element_text(hjust = 0.5, size=15),axis.text.x=element_text(size=12))
+  ggplotly(p4, tooltip = "text")%>% config(displayModeBar = FALSE) 
 }
 
 ######################################################################
@@ -350,10 +351,10 @@ app$layout(
     list(
       htmlDiv(
         list(
-          htmlH3("Group 212"),
-          htmlH2("M is for Movies!")
+          htmlH2("Group 212"),
+          htmlH1("M is for Movies!")
           #htmlH4("Smaller Text")
-        ), style = list('columnCount'=2, 'background-color'= 'grey')
+        ), style = list('columnCount'=2, 'background-color'= '#5f9ea0','padding'= '10px')
       ),
       
       htmlDiv(
@@ -362,19 +363,19 @@ app$layout(
             list(
               dccMarkdown("**Select a a y-axis metric from the dropdown:**"),
               yaxisDropdown,
-              dccMarkdown("**Select whether to adjust for inflation (to 2019 dollars):**"),
+              dccMarkdown("**Select whether to adjust for inflation  ( 2019 USD):**"),
               inflation_adj,
               dccMarkdown("**Select main chart type:**"),
               chart_type,
-              dccMarkdown("*Add some description notes about the data here*")
-            ), style = list('background-color'='lightgrey', 'columnCount'=1, 'width'='20%')
+              dccMarkdown("* This application depicts the profit made by movies from 1980 to 2010.  An unconventional metric Butts in Seats is introduced. It indicates the estimated attendance of a movie.")
+            ), style = list('background-color'='#afcecf', 'columnCount'=1, 'width'='20%','padding'= '10px')
           ),
           htmlDiv(
             list(
               #htmlP("Main Plot"),
               graph,
               yearSlider
-            ), style=list('columnCount'=1, 'width'='75%')
+            ), style=list('columnCount'=1, 'width'='75%','padding'= '25px')
           )
         ), style = list('display'='flex')#, style = list('width'="30%", 'background-color'='lightgrey')
       ),
@@ -384,9 +385,8 @@ app$layout(
           htmlDiv(
             list(
               dccMarkdown("**Select movies to compare:**"),
-              moviesDropdown,
-              dccMarkdown("*add additional notes here if needed*")
-            ), style = list('background-color'='lightgrey', 'columnCount'=1, 'width'='20%')
+              moviesDropdown
+            ), style = list('background-color'='#afcecf', 'columnCount'=1, 'width'='20%','padding'= '10px')
           ),
           htmlDiv(
             list(
@@ -396,11 +396,7 @@ app$layout(
           )
         ), style = list('display'='flex')#, style = list('width'="20%", 'background-color'='lightgrey')
       ),
-      dccMarkdown("Data is from the vega dataset 'Movies'. [Source](https://raw.githubusercontent.com/vega/vega-datasets/master/data/movies.json)")
-      
-      
-      
-      
+      dccMarkdown("Data is from the vega dataset 'Movies'.  [Source](https://raw.githubusercontent.com/vega/vega-datasets/master/data/movies.json)")
       
     )
   )
