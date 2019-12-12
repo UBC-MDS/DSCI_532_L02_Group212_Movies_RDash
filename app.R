@@ -318,7 +318,7 @@ make_graph_3 <- function(yaxis="worldwide_gross", inf="adj",
     theme(panel.border = element_blank(), panel.grid.major = element_blank(),panel.background = element_blank(),
           panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
           legend.position = "none", plot.title = element_text(hjust = 0.5, size=15),axis.text.x=element_text(size=8))
-  ggplotly(p4, tooltip = "text")%>% config(displayModeBar = FALSE) 
+  ggplotly(p4, tooltip = "text") %>% config(p4, displayModeBar = FALSE) %>% config(showLink = FALSE)
 }
 
 ######################################################################
@@ -368,7 +368,8 @@ app$layout(
               inflation_adj,
               dccMarkdown("**Select main chart type:**"),
               chart_type,
-              dccMarkdown("* This application depicts the profit made by movies from 1980 to 2010.  An unconventional metric Butts in Seats is introduced. It indicates the estimated attendance of a movie.")
+              dccMarkdown("This application depicts the profit made by movies from 1980 to 2010."),
+              dccMarkdown("An unconventional metric _Butts in Seats_ is introduced. It indicates the estimated attendance of a movie.")
             ), style = list('background-color'='#afcecf', 'columnCount'=1, 'width'='20%','padding'= '10px')
           ),
           htmlDiv(
@@ -397,8 +398,8 @@ app$layout(
           )
         ), style = list('display'='flex')#, style = list('width'="20%", 'background-color'='lightgrey')
       ),
-      dccMarkdown("Data is from the vega dataset 'Movies'.
-                  [Source](https://raw.githubusercontent.com/vega/vega-datasets/master/data/movies.json)")
+      dccMarkdown("Data is from the vega dataset 'Movies'"),
+      dccMarkdown("[Source](https://raw.githubusercontent.com/vega/vega-datasets/master/data/movies.json)")
       
     )
   )
