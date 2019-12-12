@@ -15,6 +15,7 @@ options(tidyverse.quiet = TRUE,
 
 library(ggridges) 
 library('scales')
+library(ggplot2)
 
 
 
@@ -100,7 +101,7 @@ moviesDropdown <- dccDropdown(
     df_movies$title, function(x){
       list(label=x, value=x)
     }),
-  value = c("Alice in Wonderland", "Despicable Me", "Easy A"), #I picked these movies as default
+  value = c("Jurassic Park", "The Lion King","Gladiator", "Die Hard 2", "The Aviator"), #I picked these movies as default
   multi = TRUE
 )
 
@@ -164,7 +165,7 @@ make_graph_1 <- function(years=c(1980, 2010),
     ylab(paste0("Worldwide ", y_label, " (Millions) - log(10) scale")) +
     geom_line(aes(x=year, y=median(!!sym(yaxis_to_plot)))) +
     ggtitle(paste0("Change in ", y_label, " Over Time", title_end)) +
-    theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+    theme(panel.border = element_blank(), panel.grid.major = element_blank(),panel.background = element_blank(),
           panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
           legend.position = "none", axis.text.x = element_text(angle = 45), plot.title = element_text(hjust = 0.5, size=18),axis.title.x = element_blank())
   
@@ -181,9 +182,9 @@ make_graph_1 <- function(years=c(1980, 2010),
     ggtitle(paste0("Change in ", y_label, " Over Time", title_end))+
     xlab("Year")+
     ylab(paste0("Worldwide ", y_label, " (Millions)"))+
-    theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+    theme(panel.border = element_blank(), panel.grid.major = element_blank(),panel.background = element_blank(),
           panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
-          axis.text.x = element_text(angle = 45), plot.title = element_text(hjust = 0.5, size=18),axis.title.x = element_blank())
+          axis.text.x = element_text(angle = 45), plot.title = element_text(hjust = 0.5, size=18), axis.title.x = element_blank())
   if(type == "jitter"){
     ggplotly(p1, tooltip = "text") %>% config(displayModeBar = FALSE)
   }
@@ -251,7 +252,7 @@ make_graph_2 <- function(years=c(1980, 2010),
     ylab(paste0("Worldwide ", y_label, " (Millions)")) +
     coord_flip()+
     ggtitle(paste0("Top 10 Movies")) +
-    theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+    theme(panel.border = element_blank(), panel.grid.major = element_blank(),panel.background = element_blank(),
           panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
           legend.position = "none",plot.title = element_text(hjust = 0.5, size=15),axis.text.x=element_text(size=12))
   ggplotly(p3, tooltip = "text") %>% config(displayModeBar = FALSE)
@@ -314,9 +315,9 @@ make_graph_3 <- function(yaxis="worldwide_gross", inf="adj",
     ylab(paste0("Worldwide ", y_label, " (Millions)")) +
     coord_flip() +
     ggtitle(paste0("Comparing Movies")) +
-    theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+    theme(panel.border = element_blank(), panel.grid.major = element_blank(),panel.background = element_blank(),
           panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
-          legend.position = "none", plot.title = element_text(hjust = 0.5, size=15),axis.text.x=element_text(size=12))
+          legend.position = "none", plot.title = element_text(hjust = 0.5, size=15),axis.text.x=element_text(size=8))
   ggplotly(p4, tooltip = "text")%>% config(displayModeBar = FALSE) 
 }
 
@@ -351,10 +352,10 @@ app$layout(
     list(
       htmlDiv(
         list(
-          htmlH2("Group 212"),
-          htmlH1("M is for Movies!")
+          htmlH3("Group 212"),
+          htmlH2("M is for Movies!")
           #htmlH4("Smaller Text")
-        ), style = list('columnCount'=2, 'background-color'= '#5f9ea0','padding'= '10px')
+        ), style = list('columnCount'=2, 'background-color'= '#5f9ea0','padding'= '15px 10px')
       ),
       
       htmlDiv(
@@ -396,7 +397,8 @@ app$layout(
           )
         ), style = list('display'='flex')#, style = list('width'="20%", 'background-color'='lightgrey')
       ),
-      dccMarkdown("Data is from the vega dataset 'Movies'.  [Source](https://raw.githubusercontent.com/vega/vega-datasets/master/data/movies.json)")
+      dccMarkdown("Data is from the vega dataset 'Movies'.
+                  [Source](https://raw.githubusercontent.com/vega/vega-datasets/master/data/movies.json)")
       
     )
   )
