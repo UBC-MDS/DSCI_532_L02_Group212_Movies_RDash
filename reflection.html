@@ -367,31 +367,39 @@ summary {
 
 <div id="reflection" class="section level1">
 <h1>Reflection</h1>
-<div id="feedback" class="section level2">
-<h2>Feedback</h2>
-<p>In the third week, we were able to incorporate the following suggestions in our app: - Changed the definition of Education Mobility Index (EMI) to make it concise and impactful - Instructions to effectively interact with the world map and bar plot were added - Changed the title of the line plots to make them more meaningful - Highlighted the title “Region / Country / Economy Comparisons” - Formatted the titles, axis, legend(s) etc. for all plots - Adjusted the alignment and proportions of the world map and the bar plot</p>
-<p>We also updated our Code of conduct to include a section on ‘Expected Behaviour’.</p>
-<p>The Following suggestion(s) were not incorporated in milestone 3 due to time constraints: - Countries with <code>NaN</code> values do not show up on the plot (spent a ridiculous amount of hours trying to troubleshoot this to no avail) - Add zoom in functionality in the world map, as small countries are hard to see on the map - This functionality does not exist in Altair <a href="https://github.com/altair-viz/altair/issues/632">link_to_open_issue</a> - Though regular zoom in facilitated by all brower(s) should be an acceptable workaround for the purpose of this lab - Faceting by continent is also a feasible workaround and infact potentially be more insightful when compared to the whole world - Ability to filter the bar chart to say, top 10 countries or specific countries selected</p>
-<p>Following suggestions were not implemented as per group consensus: - Change colourscheme of the world map - Add a line that mentions that missing data is not incroporated in the plots</p>
+<p>For week4, we chose to work with the <code>movie</code> dataset from vega_datasets, instead of translating our python dash app to R.</p>
+<div id="app-critique" class="section level3">
+<h3>App Critique</h3>
 </div>
-<div id="app-critique" class="section level2">
-<h2>App Critique</h2>
 <div id="what-it-does-well" class="section level3">
 <h3>What it does well</h3>
-<p>We think our app is clean and concise without a lot of superfluous information. The interactive features have all been designed with specific purposes in mind, and not just for the sake of it.</p>
+<p>We think our app is clean and concise without a lot of superfluous information. The interactive features have all been designed with specific purposes in mind, and not just for the sake of it. We have considered the impact of inflation which provides the user the flexibility to visualise both gross and inflated revenue numbers over years. We re-introduced a historic metric, “Butts in seats”, as in our opinion, it’s a relevant metric in the context of revenue patterns.</p>
 </div>
 <div id="limitations" class="section level3">
 <h3>Limitations</h3>
-<p>Some limitations of our app include: - it only includes information on education mobility - countries with <code>NaN</code> values do not show up on the plot - small countries are hard to see on the map</p>
+<p>Some limitations of our app include:</p>
+<ul>
+<li>it only includes movies from 1980 to 2010</li>
+<li>columns with <code>NA</code> values were dropped</li>
+<li>movies with with production budget in the bottom 5% were dropped
+<ul>
+<li>this includes small independent films</li>
+</ul></li>
+</ul>
+<p>Limitations due to time constraint(s):</p>
+<ul>
+<li>remove default plotly hover tool over all plot(s)</li>
+<li>use CSS to correct the colour of the <code>year slider</code></li>
+</ul>
 </div>
 <div id="future-improvements-and-additions" class="section level3">
 <h3>Future Improvements and Additions</h3>
-<p>Potential additions / improvements include: - adding more data on overall income mobility and indicators of mobility to be able to dig into deeper research questions - instead of the world map, facet by continent(s) - adding a selection filter to the bar chart to be able to filter the number of countries shown (i.e. top 20, bottom 10, etc)</p>
-</div>
-</div>
-<div id="reflection-on-the-usefullness-of-the-feedback" class="section level2">
-<h2>Reflection on the usefullness of the feedback</h2>
-<p>Overall the feedback activity conducted during lab 3 session was a productive exercise. It had a positive and constructive impact on our work. We were able to prioritize the suugestions based on their frequency among the reviewers. “fly on the wall” activity in particular stood out, as it enabled us to identify the obvious flaws in our app.</p>
+<p>Potential additions / improvements include:</p>
+<ul>
+<li>add more data from outside resource(s)</li>
+<li>separate the data into small and big production(s)</li>
+<li>include CSS formatting for overall better layout</li>
+</ul>
 </div>
 </div>
 
