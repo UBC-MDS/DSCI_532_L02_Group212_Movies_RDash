@@ -38,6 +38,7 @@ The main feature of this app is that it lets users choose which 'success' metric
 
 **Chart-specific:**
 - Plot 1 (all movies) has an associated radio button to select whether the data is shown as a box or line chart
+- Plot 1 also has a hover tool that allows you to see the movie title, distributer, year, and value for the selected metric
 - Plot 3 has a multi-selection drop down menu that will allow users to select as many movies as they like to compare
 
 ### Limitations
