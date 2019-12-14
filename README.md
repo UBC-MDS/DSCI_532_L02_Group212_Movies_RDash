@@ -25,7 +25,7 @@ This visualization app allows users to explore questions such as whether movies 
 
 The main feature of this app is that it lets users choose which 'success' metric to explore. They can focus on box office sales, profit, butts in seats, or budget and can choose whether to adjust for inflation or not. The app features a large plot (plot 1 in the figure below) showing data for all movies for the period of record (1980 to 2010). The user can choose whether this plot is a line plot (to get a quick snapshot of average change over time), or a box plot (if they are more interested in variability).  There are also two bar plots below. The left bar chart (plot 2 in the figure below) has a drop-down menu that lets users explore their own comparisons by selecting movies to compare.  The right chart (plot 3) shows the top 10 films and their values for the selected metric.
 
-![](screenshot_markedup.jpg)
+![](img/screenshot_markedup.jpg)
 
 ### Functionality
 
